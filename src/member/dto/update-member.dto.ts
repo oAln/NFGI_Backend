@@ -8,6 +8,9 @@ export class UpdateMemberDto {
   
     @ApiPropertyOptional({ example: 'Doe', description: 'Last name of the member' })
     lastName?: string;
+
+    @ApiPropertyOptional({ example: 'Doe', description: 'Last name of the member' })
+    memberRelation?: string;
   
     @ApiPropertyOptional({ example: '12345', description: 'Unique member ID' })
     memberId: string;
@@ -20,6 +23,15 @@ export class UpdateMemberDto {
   
     @ApiPropertyOptional({ example: 'New York', description: 'Town or city of the member' })
     townCity?: string;
+
+    @ApiPropertyOptional({ example: 'New York', description: 'Town or city of the member' })
+    memTaluka?: string;
+
+    @ApiPropertyOptional({ example: 'New York', description: 'Town or city of the member' })
+    memAadharNO?: string;
+
+    @ApiPropertyOptional({ example: 'New York', description: 'Town or city of the member' })
+    memPanNo?: string;
   
     @ApiPropertyOptional({ example: 'Central Park', description: 'Area or landmark' })
     areaLandmark?: string;
@@ -74,6 +86,12 @@ export class UpdateMemberDto {
   
     @ApiPropertyOptional({ example: '9876543210', description: 'Guarantor contact number' })
     guarantorContact?: string;
+
+    @ApiPropertyOptional({ example: '9876543210', description: 'Guarantor aadhar number' })
+    guarAadharNO?: string;
+
+    @ApiPropertyOptional({ example: '9876543210', description: 'Guarantor pan number' })
+    guarPanNo?: string;
   
     documentPath?: string;
 

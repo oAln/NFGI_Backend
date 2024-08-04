@@ -7,6 +7,9 @@ export class CreateMemberDto {
   @ApiProperty({ example: 'Doe', description: 'Last name of the member' })
   lastName?: string;
 
+  @ApiProperty({ example: 'Doe', description: 'Son or Wife of member' })
+  memberRelation?: string;
+
   @ApiProperty({ example: '12345', description: 'Unique member ID' })
   memberId: string;
 
@@ -18,6 +21,15 @@ export class CreateMemberDto {
 
   @ApiProperty({ example: 'New York', description: 'Town or city of the member' })
   townCity?: string;
+
+  @ApiProperty({ example: 'New York', description: 'Taluka of the member' })
+  memTaluka?: string;
+
+  @ApiProperty({ example: '12345', description: 'Aadhar of the member' })
+  memAadharNO?: string;
+
+  @ApiProperty({ example: 'CECQQ2131W', description: 'Pan of the member' })
+  memPanNo?: string;
 
   @ApiProperty({ example: 'Central Park', description: 'Area or landmark' })
   areaLandmark?: string;
@@ -72,6 +84,12 @@ export class CreateMemberDto {
 
   @ApiProperty({ example: '9876543210', description: 'Guarantor contact number' })
   guarantorContact?: string;
+
+  @ApiProperty({ example: '9876543210', description: 'Guarantor aadhar number' })
+  guarAadharNO?: string;
+
+  @ApiProperty({ example: 'CDH6543210', description: 'Guarantor pan number' })
+  guarPanNo?: string;
 
   documentPath?: string;
 

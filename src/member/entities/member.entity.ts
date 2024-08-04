@@ -15,6 +15,18 @@ export class Member {
   @Column({nullable:true})
   lastName?: string;
 
+  @Column({nullable:true})
+  memberRelation?: string;
+
+  @Column({nullable:true})
+  memTaluka?: string;
+
+  @Column({nullable:true})
+  memAadharNO?: string;
+
+  @Column({nullable:true})
+  memPanNo?: string;
+
   @Column({ unique: true })
   memberId: string;
 
@@ -80,6 +92,12 @@ export class Member {
 
   @Column({nullable:true})
   guarantorContact?: string;
+
+  @Column({nullable:true})
+  guarAadharNO?: string;
+
+  @Column({nullable:true})
+  guarPanNo?: string;
 
   @Column({ nullable: true })
   documentPath?: string;
