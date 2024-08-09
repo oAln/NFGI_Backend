@@ -25,7 +25,7 @@ import { Repayment } from './repayment/entities/repayment.entity';
     }),
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60m' },
+      signOptions: { expiresIn: '480m' },
     }),
     AuthModule,
     MemberModule,
