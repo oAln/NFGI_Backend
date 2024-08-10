@@ -39,7 +39,7 @@ export class MemberService {
       await this.filesRepository.save(file);
     }
     if (createMemberDto.loanAmount) {
-      await this.loanService.createLoan({ memberId: savedMember.memberId, amount:createMemberDto.loanAmount,installment: createMemberDto.installment ,status:"Open"});
+      await this.loanService.createLoan({ memberId: savedMember.memberId, amount:createMemberDto.loanAmount,installment: createMemberDto.installment ,status:"Active"});
     }
     return savedMember;
   }
@@ -72,7 +72,7 @@ export class MemberService {
       await this.loanService.updateLoan(updateMemberDto.loanId, {
         amount: updateMemberDto.loanAmount,
         installment: updateMemberDto.installment,
-        status:"Open"
+        status:"Active"
       });
     } else if (updateMemberDto?.loanAmount) {
       // Create new loan
@@ -80,13 +80,17 @@ export class MemberService {
         memberId: updateMemberDto.memberId,
         amount: updateMemberDto.loanAmount,
         installment: updateMemberDto.installment,
-        status:"Open"
+        status:"Active"
       });
     }
     return updatedMember;
   }
 
   async remove(id: number): Promise<void> {
+    console.log('delete id', id);
+    console.log('this.memberRepository', this.memberRepository);
+    
+    
     await this.filesRepository.delete({ memberId: id.toString() });
 
     await this.memberRepository.delete(id);
