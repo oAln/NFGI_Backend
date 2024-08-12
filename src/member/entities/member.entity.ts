@@ -135,6 +135,6 @@ export class Member {
   @OneToMany(() => File, file => file.member, { cascade: true, onDelete: 'CASCADE' }) // Set cascade and onDelete options
   files: File[];
 
-  @OneToMany(() => Loan, loan => loan.member,{ cascade: true, onDelete: 'CASCADE' })
+  @OneToMany(() => Loan, loan => loan.member)
   loans: Loan[];
 }

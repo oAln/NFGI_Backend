@@ -11,13 +11,13 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const { password, confirmPassword, ...rest } = createUserDto;
-    const userCount=await this.userRepository.count({where:{loginId:createUserDto.loginId}})    
-    if(userCount>0){
-        throw new BadRequestException(`duplicate user loginId : ${createUserDto.loginId}`);
+    const userCount = await this.userRepository.count({ where: { loginId: createUserDto.loginId } })
+    if (userCount > 0) {
+      throw new BadRequestException(`duplicate user loginId : ${createUserDto.loginId}`);
     }
     if (password !== confirmPassword) {
       throw new BadRequestException('Passwords do not match');
@@ -45,8 +45,8 @@ export class UserService {
   }
 
   async updateLastLogin(userId: number): Promise<User> {
-    const updatedResult=await this.userRepository.update(userId, { lastLoginAt: new Date() });
-    return this.findOne(userId)   
+    const updatedResult = await this.userRepository.update(userId, { lastLoginAt: new Date() });
+    return this.findOne(userId)
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
@@ -60,9 +60,8 @@ export class UserService {
 
   async search(query: any): Promise<User[]> {
     const qb = this.userRepository.createQueryBuilder('user');
-    console.log("query",query);
-    
-    
+
+
     if (query.loginId) {
       qb.andWhere('user.loginId LIKE :loginId', { loginId: `%${query.loginId}%` });
     }

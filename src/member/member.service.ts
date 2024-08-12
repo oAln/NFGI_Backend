@@ -16,52 +16,51 @@ export class MemberService {
     @InjectRepository(File)
     private filesRepository: Repository<File>,
     private loanService: LoanService
-  ) {}
+  ) { }
 
-  async create(createMemberDto: CreateMemberDto,document?:Express.Multer.File): Promise<Member> {
-    const memberCount=await this.memberRepository.count({where:{memberId:createMemberDto.memberId}})    
-    if(memberCount>0){
-        throw new BadRequestException(`duplicate member id : ${createMemberDto.memberId}`);
+  async create(createMemberDto: CreateMemberDto, document?: Express.Multer.File): Promise<Member> {
+    const memberCount = await this.memberRepository.count({ where: { memberId: createMemberDto.memberId } })
+    if (memberCount > 0) {
+      throw new BadRequestException(`duplicate member id : ${createMemberDto.memberId}`);
     }
     const member = this.memberRepository.create(createMemberDto);
-    const savedMember= await this.memberRepository.save(member)
-    console.log("member...",savedMember,document);
-    
+    const savedMember = await this.memberRepository.save(member);
+
     if (createMemberDto?.documentPath) {
       const file = this.filesRepository.create({
         documentType: 'initial', // You can change this as per your requirement
         documentPath: createMemberDto?.documentPath,
-        originalName:document.originalname,
-        fileName:document.filename,
-        member:savedMember,
+        originalName: document.originalname,
+        fileName: document.filename,
+        member: savedMember,
         memberId: savedMember.id.toString(),
       });
       await this.filesRepository.save(file);
     }
     if (createMemberDto.loanAmount) {
-      await this.loanService.createLoan({ memberId: savedMember.memberId, amount:createMemberDto.loanAmount,installment: createMemberDto.installment ,status:"Active"});
+      await this.loanService.createLoan({ memberId: savedMember.memberId, amount: createMemberDto.loanAmount, installment: createMemberDto.installment, status: "Active" });
     }
     return savedMember;
   }
 
   findAll(): Promise<Member[]> {
-    return this.memberRepository.find({relations: ['files','loans','loans.repayments']});
+    return this.memberRepository.find({ relations: ['files', 'loans', 'loans.repayments'] });
   }
 
   findOne(id: number): Promise<Member> {
-    return this.memberRepository.findOne({where:{ id },relations:['files','loans','loans.repayments']});
+    return this.memberRepository.findOne({ where: { id }, relations: ['files', 'loans', 'loans.repayments'] });
   }
 
-  async update(id: number, updateMemberDto: UpdateMemberDto,document?:Express.Multer.File): Promise<Member> {
-    const savedMember=await this.memberRepository.update(id, updateMemberDto);
-    const updatedMember=await this.memberRepository.findOneBy({ id })
+  async update(id: number, updateMemberDto: UpdateMemberDto, document?: Express.Multer.File): Promise<Member> {
+    const savedMember = await this.memberRepository.update(id, updateMemberDto);
+    const updatedMember = await this.memberRepository.findOneBy({ id })
     if (updateMemberDto?.documentPath) {
       const file = this.filesRepository.create({
         documentType: 'initial', // You can change this as per your requirement
         documentPath: updateMemberDto?.documentPath,
-        originalName:document.originalname,
-        fileName:document.filename,
-        member:updatedMember,
+        originalName: document.originalname,
+        fileName: document.filename,
+        member: updatedMember,
         memberId: id.toString(),
       });
       await this.filesRepository.save(file);
@@ -72,7 +71,7 @@ export class MemberService {
       await this.loanService.updateLoan(updateMemberDto.loanId, {
         amount: updateMemberDto.loanAmount,
         installment: updateMemberDto.installment,
-        status:"Active"
+        status: "Active"
       });
     } else if (updateMemberDto?.loanAmount) {
       // Create new loan
@@ -80,24 +79,23 @@ export class MemberService {
         memberId: updateMemberDto.memberId,
         amount: updateMemberDto.loanAmount,
         installment: updateMemberDto.installment,
-        status:"Active"
+        status: "Active"
       });
     }
     return updatedMember;
   }
 
   async remove(id: number): Promise<void> {
-    console.log('delete id', id);
-    console.log('this.memberRepository', this.memberRepository);
-    
-    
     await this.filesRepository.delete({ memberId: id.toString() });
 
     await this.memberRepository.delete(id);
   }
 
   async search(query: any): Promise<Member[]> {
-    const qb = this.memberRepository.createQueryBuilder('member');    
+    const qb = this.memberRepository.createQueryBuilder('member');
+    qb.leftJoinAndSelect('member.files', 'files')
+      .leftJoinAndSelect('member.loans', 'loans')
+      .leftJoinAndSelect('loans.repayments', 'repayments');
     Object.keys(query).forEach((key) => {
       qb.andWhere(`member.${key} LIKE :${key}`, { [key]: `%${query[key]}%` });
     });

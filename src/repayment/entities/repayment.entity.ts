@@ -7,7 +7,7 @@ export class Repayment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Loan)
+  @ManyToOne(() => Loan,loan => loan.repayments,{ cascade: true, onDelete: 'CASCADE' })
   loan: Loan;
 
   @Column('decimal')

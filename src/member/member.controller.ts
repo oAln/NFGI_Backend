@@ -32,10 +32,10 @@ class CreateMemberDtoSwagger extends CreateMemberDto {
 
 @ApiTags('member')
 @Controller('member')
-@ApiBearerAuth('JWT-auth') 
+@ApiBearerAuth('JWT-auth')
 @UseGuards(RolesGuard)
 export class MemberController {
-  constructor(private readonly memberService: MemberService) {}
+  constructor(private readonly memberService: MemberService) { }
 
   @Post()
   @Roles('admin')
@@ -68,7 +68,7 @@ export class MemberController {
     //   createMemberDto.loanId=uuidv4()
     //   createMemberDto.loanStartDate=new Date()
     // }    
-    return this.memberService.create(createMemberDto,document);
+    return this.memberService.create(createMemberDto, document);
   }
 
   @Get()
@@ -116,16 +116,11 @@ export class MemberController {
   @ApiResponse({ status: 404, description: 'Member not found' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UpdateMemberDto, description: 'Fields to update' })
-  update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto,@UploadedFile() document: Express.Multer.File) {
-    // if(updateMemberDto.loanAmount && !updateMemberDto.loanId){
-    //   updateMemberDto.loanId=uuidv4()
-    //   updateMemberDto.loanStartDate=new Date()
-    // }
+  update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto, @UploadedFile() document: Express.Multer.File) {
     if (document) {
       updateMemberDto.documentPath = document.path;
     }
-    console.log("updateMemberDto....",updateMemberDto,id,document);    
-    return this.memberService.update(+id, updateMemberDto,document);
+    return this.memberService.update(+id, updateMemberDto, document);
   }
 
   @Delete(':id')
